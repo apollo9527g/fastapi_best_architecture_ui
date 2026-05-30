@@ -7,15 +7,20 @@ on:
 
 jobs:
   sync:
+    name: Sync with upstream repository
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Sync upstream
-        run: |
-          git remote add upstream https://github.com/fastapi-practices/fastapi-best-architecture-ui.git
-          git fetch upstream
-          git checkout master
-          git merge upstream/master --no-edit
-          git push origin master
+          
+      - name: Sync with upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          upstream_sync_repo: fastapi-practices/fastapi-best-architecture-ui
+          upstream_sync_branch: master
+          target_sync_branch: master
+          test_mode: false
